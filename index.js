@@ -29,11 +29,11 @@ async function newClient (token) {
 }
 
 async function main() {
-    const actor = core.getInput('actor', {required: true, trimWhitespace: true})
+    // const actor = core.getInput('actor', {required: true, trimWhitespace: true})
     const adminToken = core.getInput('admin_token', {required: true, trimWhitespace: true})
     // const _body = core.getInput('body', {required: true, trimWhitespace: true}).trim().split(' ')
     // const issueNumber = core.getInput('issue_number', {required: true, trimWhitespace: true})
-    const org = core.getInput('org', {required: true, trimWhitespace: true})
+    // const org = core.getInput('org', {required: true, trimWhitespace: true})
     // const repo = core.getInput('repo', {required: true, trimWhitespace: true})
     // const githubToken = core.getInput('token', {required: true, trimWhitespace: true})
     // const queryRepo = _body[_body.length - 1]
