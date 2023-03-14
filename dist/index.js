@@ -11328,142 +11328,36 @@ async function newClient (token) {
     });
 }
 
-const query = `query($org: String!, $page: String) {
-        organization(login: $org) {
-            membersWithRole(first: 100, after: $page) {
-                pageInfo {
-                    endCursor
-                    hasNextPage
-                }
-                nodes {
-                    login
-                    name
-                    organizationVerifiedDomainEmails(login: $org)
-                }
-            }
-        }
-    }`
-
-async function getUsers(client, org) {
-    let hasNextPage = true
-    let page = null
-    const users = []
-
-    console.log(`Retrieving users for ${org}`)
-    while (hasNextPage) {
-        const response = await client.graphql(query, {
-            org: org,
-            page: page
-        })
-        users.push(...response.organization.membersWithRole.nodes)
-        page = response.organization.membersWithRole.pageInfo.endCursor
-        hasNextPage = response.organization.membersWithRole.pageInfo.hasNextPage
-    }
-
-    const results = {}
-    for (const user of users) {
-        if (user.organizationVerifiedDomainEmails.length === 0) {
-            if (user.name) {
-                results[user.login] = user.name
-            } else {
-                results[user.login] = user.login
-            }
-        } else {
-            results[user.login] = user.organizationVerifiedDomainEmails[0]
-        }
-    }
-
-    return results
-}
-
-async function sendComment(client, org, repo, issueNumber, body) {
-    console.log(`Sending comment to ${org}/${repo}#${issueNumber}`)
-    await client.issues.createComment({
-        owner: org,
-        repo: repo,
-        issue_number: issueNumber,
-        body: body
-    })
-}
-
 async function main() {
-    const actor = core.getInput('actor', {required: true, trimWhitespace: true})
+    // const actor = core.getInput('actor', {required: true, trimWhitespace: true})
     const adminToken = core.getInput('admin_token', {required: true, trimWhitespace: true})
-    const _body = core.getInput('body', {required: true, trimWhitespace: true}).trim().split(' ')
-    const issueNumber = core.getInput('issue_number', {required: true, trimWhitespace: true})
+    // const _body = core.getInput('body', {required: true, trimWhitespace: true}).trim().split(' ')
+    // const issueNumber = core.getInput('issue_number', {required: true, trimWhitespace: true})
     const org = core.getInput('org', {required: true, trimWhitespace: true})
-    const repo = core.getInput('repo', {required: true, trimWhitespace: true})
-    const githubToken = core.getInput('token', {required: true, trimWhitespace: true})
-    const queryRepo = _body[_body.length - 1]
+    // const repo = core.getInput('repo', {required: true, trimWhitespace: true})
+    // const githubToken = core.getInput('token', {required: true, trimWhitespace: true})
+    // const queryRepo = _body[_body.length - 1]
 
     const client = await newClient(adminToken)
-    const commentClient = await newClient(githubToken)
+    // const commentClient = await newClient(githubToken)
 
-    let users
-    try {
-        users = await getUsers(client, org)
-    } catch (e) {
-        await sendComment(commentClient, org, repo,issueNumber, `@${actor} There was an error retrieving the users for ${org}: ${e.message}`)
-        core.setFailed(e.message)
-    }
-
-    let members
-    try {
-        console.log(`Retrieving direct admins for ${org}/${queryRepo}`)
-        members = await client.paginate(client.repos.listCollaborators, {
-            owner: org,
-            repo: queryRepo,
-            affiliation: 'direct',
-            per_page: 100
-        })
-    } catch (e) {
-        await sendComment(commentClient, org, repo, issueNumber,`@${actor} There was an error retrieving the direct admins for ${repo}: ${e.message}`)
-        core.setFailed(e.message)
-    }
-
-    const admins = members.filter(member => member.permissions.admin).map(member => member.login)
-
-    let teams
-    try {
-        console.log(`Retrieving teams for ${org}/${repo}`)
-        teams = await client.paginate(client.repos.listTeams, {
-            owner: org,
-            repo: queryRepo,
-        })
-    } catch (e) {
-        await sendComment(commentClient, org, repo, issueNumber,`@${actor} There was an error retrieving the teams for ${repo}: ${e.message}`)
-        core.setFailed(e.message)
-    }
-
-    const adminTeams = teams.filter(t => t.permission === 'admin')
-    for (const team of adminTeams) {
+    const repos = await client.paginate('GET /orgs/{org}/repos', {
+        org: org,
+        per_page: 100
+    })
+    for (const repo of repos) {
+        // check if repo has .github/models.yml exists
         try {
-            console.log(`Retrieving members for ${team.name}`)
-            const members = await client.paginate(client.teams.listMembersInOrg, {
-                org: org,
-                team_slug: team.slug,
-                per_page: 100
+            await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
+                owner: repo.owner.login,
+                repo: repo.name,
+                path: '.github/models.yml'
             })
-            for (const member of members) {
-                if (!admins.includes(member.login)) {
-                    admins.push(member.login)
-                }
-            }
+            console.log(`Found ${repo.name}`)
+            await fs.appendFileSync('./models.yml', `${repo.name}\n`)
         } catch (e) {
-            await sendComment(commentClient, org, repo, issueNumber,`@${actor} There was an error retrieving the members for ${team.name}: ${e.message}`)
-            core.setFailed(e.message)
+            console.error(`Error: ${e}`)
         }
-    }
-
-    if(admins.length === 0) {
-        await sendComment(commentClient, org, repo, issueNumber,`@${actor} There are no admins for ${repo}`)
-        core.setFailed(`There are no admins for ${queryRepo}`)
-    } else {
-        let body = `Because the repository you are seeking access to is maintained by project members, the GitHub admin team is not able to assist with this request, as we do not fulfill administrative requests for repositories with active administrators. Please contact the following members for assistance with access to https://github.com/${org}/${queryRepo}:\n\n`
-        for (const admin of admins) {
-            body += `* ${users[admin]}\n`
-        }
-        await sendComment(commentClient, org, repo, issueNumber, body)
     }
 }
 

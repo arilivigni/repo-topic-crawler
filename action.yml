@@ -13,12 +13,6 @@ inputs:
     description: 'The GitHub org containing the repo'
     required: true
     default: ${{ github.repository_owner }}
-  # repo:
-  #   description: 'The repo where the GitHub issue exists'
-  #   required: true
-  # token:
-  #   description: 'GitHub Admin PAT to open issues and comment'
-  #   required: true
 runs:
   using: node16
   main: dist/index.js
