@@ -9,14 +9,6 @@ inputs:
   admin_token:
     description: 'Token with access to team and org membership'
     required: true
-  # body:
-  #   description: 'The body of the newly created comment'
-  #   required: true
-  #   default: ${{ github.event.comment.body }}
-  # issue_number:
-  #   description: 'The GitHub issue number'
-  #   required: true
-  #   default: ${{ github.event.issue.number }}
   org:
     description: 'The GitHub org containing the repo'
     required: true

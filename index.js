@@ -33,7 +33,7 @@ async function main() {
     const adminToken = core.getInput('admin_token', {required: true, trimWhitespace: true})
     // const _body = core.getInput('body', {required: true, trimWhitespace: true}).trim().split(' ')
     // const issueNumber = core.getInput('issue_number', {required: true, trimWhitespace: true})
-    // const org = core.getInput('org', {required: true, trimWhitespace: true})
+    const org = core.getInput('org', {required: true, trimWhitespace: true})
     // const repo = core.getInput('repo', {required: true, trimWhitespace: true})
     // const githubToken = core.getInput('token', {required: true, trimWhitespace: true})
     // const queryRepo = _body[_body.length - 1]
@@ -42,7 +42,7 @@ async function main() {
     // const commentClient = await newClient(githubToken)
 
     const repos = await client.paginate('GET /orgs/{org}/repos', {
-        org: 'department-of-veterans-affairs',
+        org: org,
         per_page: 100
     })
     for (const repo of repos) {
