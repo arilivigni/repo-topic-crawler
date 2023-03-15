@@ -4,12 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx @vercel/ncc build index.js -m -o dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@actions/artifact": "^1.1.1",
     "@actions/core": "^1.10.0",
     "@octokit/plugin-retry": "^4.1.3",
     "@octokit/plugin-throttling": "^5.0.1",

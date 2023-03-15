@@ -1,11 +1,7 @@
-name: 'GitHUb organization gate-keeper'
+name: 'GitHub organization repo topic crawler'
 author: 'Ari LiVigni'
-description: 'Comments on an issue with the admin of a repo'
+description: 'crawl repository topic to collect data'
 inputs:
-  actor:
-    description: 'The actor who triggered the event'
-    required: true
-    default: ${{ github.actor }}
   admin_token:
     description: 'Token with access to team and org membership'
     required: true
@@ -13,6 +9,14 @@ inputs:
     description: 'The GitHub org containing the repo'
     required: true
     default: ${{ github.repository_owner }}
+  repo_topic:
+    description: 'Repo topic to filter on'
+    required: true
+    default: innersource-ml
+  repo_file:
+    description: 'Path and file '
+    required: true
+    default: '.github/models.yml'
 runs:
   using: node16
   main: dist/index.js

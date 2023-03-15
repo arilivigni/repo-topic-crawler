@@ -1,4 +1,5 @@
 const core = require('@actions/core')
+const artifact = require('@actions/artifact')
 const {Octokit} = require("@octokit/rest")
 const {retry} = require("@octokit/plugin-retry")
 const {throttling} = require("@octokit/plugin-throttling")
@@ -29,35 +30,41 @@ async function newClient (token) {
 }
 
 async function main() {
-    // const actor = core.getInput('actor', {required: true, trimWhitespace: true})
     const adminToken = core.getInput('admin_token', {required: true, trimWhitespace: true})
-    // const _body = core.getInput('body', {required: true, trimWhitespace: true}).trim().split(' ')
-    // const issueNumber = core.getInput('issue_number', {required: true, trimWhitespace: true})
     const org = core.getInput('org', {required: true, trimWhitespace: true})
-    // const repo = core.getInput('repo', {required: true, trimWhitespace: true})
-    // const githubToken = core.getInput('token', {required: true, trimWhitespace: true})
-    // const queryRepo = _body[_body.length - 1]
-
+    const repoTopic = core.getInput('repo_topic', {required: true, trimWhitespace: true})
+    const repoFile = core.getInput('repo_file', {required: true, trimWhitespace: true})
+    const failed = false
+    const mlRepos = {}
     const client = await newClient(adminToken)
-    // const commentClient = await newClient(githubToken)
-
-    const repos = await client.paginate('GET /orgs/{org}/repos', {
+    const _repos = await client.paginate('GET /orgs/{org}/repos', {
         org: org,
         per_page: 100
     })
+    // filter on repository topic from input
+    const repos = _repos.filter(repo => repo.topics.includes(repoTopic))
     for (const repo of repos) {
-        // check if repo has .github/models.yml exists
+        // check if repo has repository file from input
         try {
-            await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
+            const {data:response} = await client.request('GET /repos/{owner}/{repo}/contents/{path}', {
                 owner: repo.owner.login,
                 repo: repo.name,
-                path: '.github/models.yml'
+                path: repoFile
             })
-            console.log(`Found ${repo.name}`)
-            await fs.appendFileSync('./models.yml', `${repo.name}\n`)
+            core.info(`Found ${repo.name}`)
+            mlRepos[repo.name] = JSON.parse(Buffer.from(response.content, 'base64').toString())
         } catch (e) {
-            console.error(`Error: ${e}`)
+            failed = true
+            core.error(`Error: ${e}`)
         }
+    }
+    fs.writeFileSync('data.json', JSON.stringify(mlRepos, null, 2))
+    await artifact.uploadArtifact('innersource-ml-repos', ['data.json'], __dirname, {
+        continueOnError: false,
+        retentionDays: 90
+    })
+    if (failed) {
+        core.setFailed('Failed to get ml repos')
     }
 }
 
