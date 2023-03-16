@@ -36,7 +36,7 @@ async function main() {
     const org = core.getInput('org', {required: true, trimWhitespace: true})
     const repoTopic = core.getInput('repo_topic', {required: true, trimWhitespace: true})
     const repoFile = core.getInput('repo_file', {required: true, trimWhitespace: true})
-    const failed = false
+    let failed = false
     const collectedRepos = []
     const client = await newClient(adminToken)
     const _repos = await client.paginate('GET /orgs/{org}/repos', {
