@@ -37,6 +37,7 @@ async function main() {
     const repoTopic = core.getInput('repo_topic', {required: true, trimWhitespace: true})
     const repoFile = core.getInput('repo_file', {required: true, trimWhitespace: true})
     const collectedRepos = []
+    let failed = false
     const client = await newClient(adminToken)
     const artifactClient = artifact.create()
     const _repos = await client.paginate('GET /orgs/{org}/repos', {
@@ -56,6 +57,7 @@ async function main() {
             core.info(`Found ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
             collectedRepos.push(repo.name, yaml.load(fs.readFileSync(repoFile), 'utf8'));
         } catch (e) {
+            failed = true
             core.error(`Error: ${e}`)
         }
     }
@@ -65,6 +67,9 @@ async function main() {
         continueOnError: false,
         retentionDays: 90
     }) // upload artifact
+    if (failed) {
+        core.setFailed('Some repositories failed to be collected')
+    }
 }
 
 main()
