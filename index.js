@@ -39,6 +39,7 @@ async function main() {
     let failed = false
     const collectedRepos = []
     const client = await newClient(adminToken)
+    const artifactClient = artifact.create()
     const _repos = await client.paginate('GET /orgs/{org}/repos', {
         org: org,
         per_page: 100
@@ -62,14 +63,10 @@ async function main() {
         }
     }
     fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: collectedRepos}, null, 2))
-    await artifact.create().uploadArtifact('collected-repos', ['data.json'], '.' , {
+    await artifactClient.uploadArtifact(repoTopic, ['data.json'], '.', {
         continueOnError: false,
         retentionDays: 90
     }) // upload artifact
-    // await artifact.uploadArtifact('collected-repos', ['data.json'], '.' , {
-    //     continueOnError: false,
-    //     retentionDays: 90
-    // })
 
     if (failed) {
         core.setFailed(`Failed to get repos with topic ${repoTopic}`)
