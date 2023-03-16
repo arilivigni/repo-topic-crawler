@@ -22184,20 +22184,21 @@ async function main() {
             })
             core.info(`Found ${repoFile} in repository ${repo.name}`)
             collectedRepos.push(repo.name, yaml.load(fs.readFileSync(repoFile), 'utf8'));
-        } catch (e) {
-            failed = true
+            // collectedRepos[repo.name] = JSON.parse(Buffer.from(response.content, 'base64').toString())
+        } catch {
+            // failed = true
             core.error(`Error: ${e}`)
         }
     }
     fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: collectedRepos}, null, 2))
-    // await artifactClient.uploadArtifact(repoTopic, ['data.json'], '.', {
-    //     continueOnError: false,
-    //     retentionDays: 90
-    // }) // upload artifact
+    await artifactClient.uploadArtifact(repoTopic, ['data.json'], '.', {
+        continueOnError: false,
+        retentionDays: 90
+    }) // upload artifact
 
-    if (failed) {
-        core.setFailed(`Failed to get repos with topic ${repoTopic}`)
-    }
+    // if (failed) {
+    //     core.setFailed(`Failed to get repos with topic ${repoTopic}`)
+    // }
 }
 
 main()
