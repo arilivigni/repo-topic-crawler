@@ -62,10 +62,15 @@ async function main() {
         }
     }
     fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: collectedRepos}, null, 2))
-    await artifact.uploadArtifact('collected-repos', ['data.json'], '.' , {
+    await artifact.create().uploadArtifact('collected-repos', ['data.json'], '.' , {
         continueOnError: false,
         retentionDays: 90
-    })
+    }) // upload artifact
+    // await artifact.uploadArtifact('collected-repos', ['data.json'], '.' , {
+    //     continueOnError: false,
+    //     retentionDays: 90
+    // })
+
     if (failed) {
         core.setFailed(`Failed to get repos with topic ${repoTopic}`)
     }
