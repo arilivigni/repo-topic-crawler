@@ -22190,7 +22190,7 @@ async function main() {
         }
     }
     fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: collectedRepos}, null, 2))
-    await artifact.uploadArtifact('collected-repos', ['data.json'], __dirname, {
+    await artifact.uploadArtifact('collected-repos', ['data.json'], '.' , {
         continueOnError: false,
         retentionDays: 90
     })
