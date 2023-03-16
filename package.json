@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx @vercel/ncc build index.js -o dist"
+    "build": "npx @vercel/ncc build index.js -m -o dist"
   },
   "keywords": [],
   "author": "",
