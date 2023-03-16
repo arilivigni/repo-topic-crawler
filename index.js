@@ -1,5 +1,7 @@
 const core = require('@actions/core')
 const artifact = require('@actions/artifact')
+const fs = require('fs');
+const yaml = require('js-yaml');
 const {Octokit} = require("@octokit/rest")
 const {retry} = require("@octokit/plugin-retry")
 const {throttling} = require("@octokit/plugin-throttling")
@@ -35,7 +37,7 @@ async function main() {
     const repoTopic = core.getInput('repo_topic', {required: true, trimWhitespace: true})
     const repoFile = core.getInput('repo_file', {required: true, trimWhitespace: true})
     const failed = false
-    const mlRepos = {}
+    const collectedRepos = []
     const client = await newClient(adminToken)
     const _repos = await client.paginate('GET /orgs/{org}/repos', {
         org: org,
@@ -51,20 +53,21 @@ async function main() {
                 repo: repo.name,
                 path: repoFile
             })
-            core.info(`Found ${repo.name}`)
-            mlRepos[repo.name] = JSON.parse(Buffer.from(response.content, 'base64').toString())
+            core.info(`Found ${repoFile} in repository ${repo.name}`)
+            collectedRepos.push(repo.name, yaml.load(fs.readFileSync(repoFile), 'utf8'));
+            // collectedRepos[repo.name] = JSON.parse(Buffer.from(response.content, 'base64').toString())
         } catch (e) {
             failed = true
             core.error(`Error: ${e}`)
         }
     }
-    fs.writeFileSync('data.json', JSON.stringify(mlRepos, null, 2))
-    await artifact.uploadArtifact('innersource-ml-repos', ['data.json'], __dirname, {
+    fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: collectedRepos}, null, 2))
+    await artifact.uploadArtifact('collected-repos', ['data.json'], __dirname, {
         continueOnError: false,
         retentionDays: 90
     })
     if (failed) {
-        core.setFailed('Failed to get ml repos')
+        core.setFailed(`Failed to get repos with topic ${repoTopic}`)
     }
 }
 
