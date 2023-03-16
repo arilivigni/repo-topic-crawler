@@ -36,7 +36,7 @@ async function main() {
     const org = core.getInput('org', {required: true, trimWhitespace: true})
     const repoTopic = core.getInput('repo_topic', {required: true, trimWhitespace: true})
     const repoFile = core.getInput('repo_file', {required: true, trimWhitespace: true})
-    const collectedRepos = []
+    let collectedRepos = []
     let failed = false
     const client = await newClient(adminToken)
     const artifactClient = artifact.create()
