@@ -57,7 +57,7 @@ async function main() {
             core.info(`Found ${repoFile} in repository ${repo.name}`)
             collectedRepos.push(repo.name, yaml.load(fs.readFileSync(repoFile), 'utf8'));
             // collectedRepos[repo.name] = JSON.parse(Buffer.from(response.content, 'base64').toString())
-        } catch {
+        } catch (e) {
             // failed = true
             core.error(`Error: ${e}`)
         }
