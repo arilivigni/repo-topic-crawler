@@ -36,7 +36,7 @@ async function main() {
     const org = core.getInput('org', {required: true, trimWhitespace: true})
     const repoTopic = core.getInput('repo_topic', {required: true, trimWhitespace: true})
     const repoFile = core.getInput('repo_file', {required: true, trimWhitespace: true})
-    let collectedRepos = []
+    const collectedRepos = []
     let failed = false
     const client = await newClient(adminToken)
     const artifactClient = artifact.create()
@@ -57,6 +57,7 @@ async function main() {
             core.info(`Found ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
             collectedRepos.push(repo.name, yaml.load(fs.readFileSync(repoFile), 'utf8'));
         } catch (e) {
+            core.debug(`Did NOT find ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
             failed = true
             core.error(`Error: ${e}`)
         }
