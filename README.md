@@ -3,7 +3,7 @@
 This Javascript is used to filter repositories by a specific topic and then look for a file in a specific path to analyze.
 Once all repository files are found a `data.json` file is created and uploaded as an artifact as part of the action execution.
 
-## A Node.js scipt + action yaml
+## A Node.js script + action yaml
 
 - index.js
 - action.yml
