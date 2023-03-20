@@ -3,10 +3,10 @@ author: 'Ari LiVigni'
 description: 'crawl repository topic to collect data'
 inputs:
   admin_token:
-    description: 'Token with access to team and org membership'
+    description: 'Token with access to repository and topics'
     required: true
   org:
-    description: 'The GitHub org containing the repo'
+    description: 'The GitHub organization containing the repo'
     required: true
     default: ${{ github.repository_owner }}
   repo_topic:
