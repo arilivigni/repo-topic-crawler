@@ -36,7 +36,7 @@ async function main() {
     const org = core.getInput('org', {required: true, trimWhitespace: true})
     const repoTopic = core.getInput('repo_topic', {required: true, trimWhitespace: true})
     const repoFile = core.getInput('repo_file', {required: true, trimWhitespace: true})
-    const collectedRepos = []
+    const collectedRepos = {}
     let failed = false
     const client = await newClient(adminToken)
     const artifactClient = artifact.create()
@@ -55,7 +55,7 @@ async function main() {
                 path: repoFile
             })
             core.info(`Found ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
-            collectedRepos.push(`'repository': '${repo.name}'`, yaml.load(Buffer.from(response.content, 'base64').toString()));
+            collectedRepos[repo.name] = yaml.load(Buffer.from(response.content, 'base64').toString())
         } catch (e) {
             core.debug(`Did NOT find ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
             failed = true
@@ -63,7 +63,9 @@ async function main() {
         }
     }
     core.info(`There were ${collectedRepos.length} repositories with topic ${repoTopic} and containing file ${repoFile}}`)
-    fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: collectedRepos}, null, 2))
+    const crawledObj = {}
+    topics[repoTopic] = collectedRepos
+    fs.writeFileSync('data.json', JSON.stringify(crawledObj, null, 2))
     await artifactClient.uploadArtifact(repoTopic, ['data.json'], '.', {
         continueOnError: false,
         retentionDays: 90
