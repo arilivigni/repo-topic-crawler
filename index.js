@@ -63,7 +63,7 @@ async function main() {
         }
     }
     core.info(`There were ${collectedRepos.length} repositories with topic ${repoTopic} and containing file ${repoFile}}`)
-    fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: collectedRepos}, null, 2))
+    fs.writeFileSync('data.json', JSON.stringify({[repoTopic]: [collectedRepos]}, null, 2))
     await artifactClient.uploadArtifact(repoTopic, ['data.json'], '.', {
         continueOnError: false,
         retentionDays: 90
