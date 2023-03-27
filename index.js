@@ -55,7 +55,7 @@ async function main() {
                 path: repoFile
             })
             core.info(`Found ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
-            const repository = "'repository:' '" + repo.name + "'"
+            const repository = "repository: " + repo.name
             collectedRepos.push(repository, yaml.load(Buffer.from(response.content, 'base64').toString()));
         } catch (e) {
             core.debug(`Did NOT find ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
