@@ -64,7 +64,7 @@ async function main() {
     }
     core.info(`There were ${collectedRepos.length} repositories with topic ${repoTopic} and containing file ${repoFile}}`)
     const crawledObj = {}
-    topics[repoTopic] = collectedRepos
+    crawledObj[repoTopic] = collectedRepos
     fs.writeFileSync('data.json', JSON.stringify(crawledObj, null, 2))
     await artifactClient.uploadArtifact(repoTopic, ['data.json'], '.', {
         continueOnError: false,
