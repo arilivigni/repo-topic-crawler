@@ -56,7 +56,7 @@ async function main() {
                 path: repoFile
             })
             core.info(`Found ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
-            collectedRepos.push({"name":repo, "models":yaml.load(Buffer.from(response.content, 'base64').toString())})
+            collectedRepos.push({"name":repo, "models":yaml.load(Buffer.from(response.content.models, 'base64').toString())})
         } catch (e) {
             core.debug(`Did NOT find ${repoFile} in repository ${repo.name} with topic ${repoTopic}}`)
             failed = true
