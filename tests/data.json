@@ -1,0 +1,45 @@
+[
+  {
+    "topic": "innersource-ml",
+    "repos": [
+      {
+        "name": "va-innersource-ml-oil",
+        "models": [
+          {
+            "name": "masterblaster-ml",
+            "description": "This model conducts machine learning for cancer studies",
+            "path": "masterblaster-ml/models",
+            "language": "Matlab",
+            "framework": "TenserFlow"
+          },
+          {
+            "name": "skywalker-ml",
+            "description": "This model conducts machine learning for walking studies",
+            "path": "skywalker-ml/models",
+            "language": "Python",
+            "framework": "PyTorch"
+          }
+        ]
+      },
+      {
+        "name": "va-innersource-ml-health",
+        "models": [
+          {
+            "name": "masterblaster-ml2",
+            "description": "This model conducts machine learning for cancer studies",
+            "path": "masterblaster-ml/models",
+            "language": "Matlab",
+            "framework": "TenserFlow"
+          },
+          {
+            "name": "skywalker-ml2",
+            "description": "This model conducts machine learning for walking studies",
+            "path": "skywalker-ml/models",
+            "language": "Python",
+            "framework": "PyTorch"
+          }
+        ]
+      }
+    ]
+  }
+]

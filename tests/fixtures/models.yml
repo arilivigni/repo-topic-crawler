@@ -1,0 +1,17 @@
+---
+models:
+  - name: va-innersource-ml-oil
+    description: This model conducts machine learning for cancer studies
+    path: masterblaster-ml/models
+    language: MatLab # i.e., Python, R, MatLab
+    framework: TenserFlow # i.e. PyTorch, TensorFlow, Spark, AML
+  - name: <model_2_name>
+    description: <model_2_description>
+    path: <model_2_path_to_containing_directory_in_repository>
+    language: <model_2_source_code_language> # i.e., Python, R, MatLab
+    framework: <model_2_framework>, <model_2_framework> # i.e. PyTorch, TensorFlow, Spark, AML
+  - name: <model_3_name>
+    description: <model_3_description>
+    path: <model_3_path_to_containing_directory_in_repository>
+    language: <model_3_source_code_language> # i.e., Python, R, MatLab
+    framework: <model_3_framework>, <model_4_framework>, <model_5_framework> # i.e. PyTorch, TensorFlow, Spark, AML
