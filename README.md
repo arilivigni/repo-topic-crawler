@@ -35,65 +35,77 @@ The output generated from all files found is `data.json` file.
 #### Example `data.json` file
 
 ```json
-{
-  "innersource-ml": [
-    "achme-innersource-ml",
-    {
-      "models": [
-        {
-          "name": "masterblaster-ml",
-          "description": "This repository conducts machine learning for cancer studies",
-          "path": "masterblaster-ml/models",
-          "language": "Matlab",
-          "framework": "TenserFlow"
-        },
-        {
-          "name": "skywalker-ml",
-          "description": "This repository conducts machine learning for walking studies",
-          "path": "skywalker-ml/models",
-          "language": "Python",
-          "framework": "PyTorch"
-        }
-      ]
-    },
-    "foo-innsersource-ml",
-    {
-      "models": [
-        {
-          "name": "killswitch-ml",
-          "description": "This repository conducts machine learning for oil production",
-          "path": "killswitch-ml/models",
-          "language": "Matlab",
-          "framework": "AML"
-        },
-        {
-          "name": "chainlink-ml",
-          "description": "This repository conducts machine learning for block chain",
-          "path": "chainlink-ml/models",
-          "language": "Python",
-          "framework": "Spark"
-        }
-      ]
-    },
-    "bar-innersource-ml",
-    {
-      "models": [
-        {
-          "name": "sundial-ml",
-          "description": "This repository conducts machine learning for solar energy",
-          "path": "sundial-ml/models",
-          "language": "R",
-          "framework": "PyTorch"
-        },
-        {
-          "name": "windmill-ml",
-          "description": "This repository conducts machine learning for wind energy",
-          "path": "windmill-ml/models",
-          "language": "Python",
-          "framework": "Tensorflow"
-        }
-      ]
-    }
-  ]
-}
+[
+  {
+    "topic": "innersource-ml",
+    "repos": [
+      {
+        "name": "va-innersource-ml-template",
+        "models": [
+          {
+            "name": "masterblaster-ml",
+            "description": "This model conducts machine learning for cancer studies",
+            "path": "masterblaster-ml/models",
+            "language": "Matlab",
+            "framework": "TenserFlow"
+          },
+          {
+            "name": "skywalker-ml",
+            "description": "This model conducts machine learning for walking studies",
+            "path": "skywalker-ml/models",
+            "language": "Python",
+            "framework": "PyTorch"
+          },
+          {
+            "name": "sundial-ml",
+            "description": "This model conducts machine learning for solar energy",
+            "path": "sundial-ml/models",
+            "language": "R, MatLab",
+            "framework": "PyTorch"
+          },
+          {
+            "name": "windmill-ml",
+            "description": "This model conducts machine learning for wind energy",
+            "path": "windmill-ml/models",
+            "language": "Python",
+            "framework": "Tensorflow, Spark, PyTorch"
+          }
+        ]
+      },
+      {
+        "name": "va-innersource-ml-template-2",
+        "models": [
+          {
+            "name": "masterblaster2-ml",
+            "description": "This model conducts machine learning for 2 cancer studies",
+            "path": "masterblaster2-ml/models",
+            "language": "Matlab",
+            "framework": "TenserFlow"
+          },
+          {
+            "name": "skywalker2-ml",
+            "description": "This model conducts machine learning for 2 walking studies",
+            "path": "skywalker2-ml/models",
+            "language": "Python",
+            "framework": "PyTorch"
+          },
+          {
+            "name": "sundial2-ml",
+            "description": "This model conducts machine learning for 2 solar energy",
+            "path": "sundial2-ml/models",
+            "language": "R",
+            "framework": "PyTorch"
+          },
+          {
+            "name": "windmill2-ml",
+            "description": "This model conducts machine learning for 2 wind energy",
+            "path": "windmill2-ml/models",
+            "language": "Python",
+            "framework": "Tensorflow"
+          }
+        ]
+      }
+    ]
+  }
+]
 ```
